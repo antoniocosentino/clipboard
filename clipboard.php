@@ -43,20 +43,23 @@ fclose($myfile);
         const initializeTextarea = () => {
             const textAreaElement = document.querySelector('textarea');
 
-            textAreaElement.addEventListener("keyup", (event) => {
+            let debounceTimeout;
+
+            textAreaElement.addEventListener("input", (event) => {
                 const newVal = event.target.value;
 
-                const formData = new FormData();
-                formData.append('content', newVal);
+                clearTimeout(debounceTimeout);
+                debounceTimeout = setTimeout(() => {
+                    const formData = new FormData();
+                    formData.append('content', newVal);
 
-                const response = fetch(window.location.href, {
-                    method: "POST",
-                    body: formData
-                });
-
-
-            })
-        }
+                    fetch(window.location.href, {
+                        method: "POST",
+                        body: formData
+                    });
+                }, 300);
+            });
+        };
 
         initializeTextarea();
     </script>
